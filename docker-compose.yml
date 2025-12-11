@@ -15,6 +15,11 @@ volumes:
   langfuse_clickhouse_logs:
   langfuse_minio_data:
 
+networks:
+  default:
+    external: true
+    name: ai-stack
+
 x-n8n: &service-n8n
   image: n8nio/n8n:latest
   environment:
@@ -29,29 +34,29 @@ x-n8n: &service-n8n
     - N8N_USER_MANAGEMENT_JWT_SECRET
     - WEBHOOK_URL=${N8N_HOSTNAME:+https://}${N8N_HOSTNAME:-http://localhost:5678}
 
-x-ollama: &service-ollama
-  image: ollama/ollama:latest
-  container_name: ollama
-  restart: unless-stopped
-  expose:
-    - 11434/tcp
-  environment:
-    - OLLAMA_CONTEXT_LENGTH=8192
-    - OLLAMA_FLASH_ATTENTION=1
-    - OLLAMA_KV_CACHE_TYPE=q8_0
-    - OLLAMA_MAX_LOADED_MODELS=2
-  volumes:
-    - ollama_storage:/root/.ollama
-
-x-init-ollama: &init-ollama
-  image: ollama/ollama:latest
-  container_name: ollama-pull-llama
-  volumes:
-    - ollama_storage:/root/.ollama
-  entrypoint: /bin/sh
-  command:
-    - "-c"
-    - "sleep 3; OLLAMA_HOST=ollama:11434 ollama pull qwen2.5:7b-instruct-q4_K_M; OLLAMA_HOST=ollama:11434 ollama pull nomic-embed-text"
+#x-ollama: &service-ollama
+#  image: ollama/ollama:latest
+#  container_name: ollama
+#  restart: unless-stopped
+#  expose:
+#    - 11434/tcp
+#  environment:
+#    - OLLAMA_CONTEXT_LENGTH=8192
+#    - OLLAMA_FLASH_ATTENTION=1
+#    - OLLAMA_KV_CACHE_TYPE=q8_0
+#    - OLLAMA_MAX_LOADED_MODELS=2
+#  volumes:
+#    - ollama_storage:/root/.ollama
+#
+#x-init-ollama: &init-ollama
+#  image: ollama/ollama:latest
+#  container_name: ollama-pull-llama
+#  volumes:
+#    - ollama_storage:/root/.ollama
+#  entrypoint: /bin/sh
+#  command:
+#    - "-c"
+#    - "sleep 3; OLLAMA_HOST=ollama:11434 ollama pull qwen2.5:7b-instruct-q4_K_M; OLLAMA_HOST=ollama:11434 ollama pull nomic-embed-text"
 
 services:
   flowise:
