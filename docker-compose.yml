@@ -18,7 +18,7 @@ volumes:
 networks:
   default:
     external: true
-    name: ai-stack
+    name: local_ai
 
 x-n8n: &service-n8n
   image: n8nio/n8n:latest
@@ -360,44 +360,44 @@ services:
         max-size: "1m"
         max-file: "1"
 
-  ollama-cpu:
-    profiles: ["cpu"]
-    <<: *service-ollama
+#  ollama-cpu:
+#    profiles: ["cpu"]
+#    <<: *service-ollama
 
-  ollama-gpu:
-    profiles: ["gpu-nvidia"]
-    <<: *service-ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+#  ollama-gpu:
+#    profiles: ["gpu-nvidia"]
+#    <<: *service-ollama
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: 1
+#              capabilities: [gpu]
 
-  ollama-gpu-amd:
-    profiles: ["gpu-amd"]
-    <<: *service-ollama
-    image: ollama/ollama:rocm
-    devices:
-      - "/dev/kfd"
-      - "/dev/dri"
+#  ollama-gpu-amd:
+#    profiles: ["gpu-amd"]
+#    <<: *service-ollama
+#    image: ollama/ollama:rocm
+#    devices:
+#      - "/dev/kfd"
+#      - "/dev/dri"
 
-  ollama-pull-llama-cpu:
-    profiles: ["cpu"]
-    <<: *init-ollama
-    depends_on:
-      - ollama-cpu
+#  ollama-pull-llama-cpu:
+#    profiles: ["cpu"]
+#    <<: *init-ollama
+#    depends_on:
+#      - ollama-cpu
 
-  ollama-pull-llama-gpu:
-    profiles: ["gpu-nvidia"]
-    <<: *init-ollama
-    depends_on:
-      - ollama-gpu
+#  ollama-pull-llama-gpu:
+#    profiles: ["gpu-nvidia"]
+#    <<: *init-ollama
+#    depends_on:
+#      - ollama-gpu
 
-  ollama-pull-llama-gpu-amd:
-    profiles: [gpu-amd]
-    <<: *init-ollama
-    image: ollama/ollama:rocm
-    depends_on:
-     - ollama-gpu-amd
+#  ollama-pull-llama-gpu-amd:
+#    profiles: [gpu-amd]
+#    <<: *init-ollama
+#    image: ollama/ollama:rocm
+#    depends_on:
+#     - ollama-gpu-amd
