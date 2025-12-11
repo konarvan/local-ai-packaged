@@ -3,7 +3,7 @@ include:
 
 volumes:
   n8n_storage:
-  ollama_storage:
+#  ollama_storage:
   qdrant_storage:
   open-webui:
   flowise:
@@ -15,16 +15,20 @@ volumes:
   langfuse_clickhouse_logs:
   langfuse_minio_data:
 
+#networks:
+#  default:
+#    external: true
+#    name: local_ai
+    
 networks:
   default:
-    external: true
-    name: local_ai
+    name: localai_default    
 
 x-n8n: &service-n8n
   image: n8nio/n8n:latest
   environment:
     - DB_TYPE=postgresdb
-    - DB_POSTGRESDB_HOST=db
+    - DB_POSTGRESDB_HOST=supabase-db    
     - DB_POSTGRESDB_USER=postgres
     - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
     - DB_POSTGRESDB_DATABASE=postgres
