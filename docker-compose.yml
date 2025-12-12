@@ -14,11 +14,6 @@ volumes:
   langfuse_clickhouse_data:
   langfuse_clickhouse_logs:
   langfuse_minio_data:
-
-#networks:
-#  default:
-#    external: true
-#    name: local_ai
     
 networks:
   default:
@@ -90,15 +85,15 @@ services:
     volumes:
       - open-webui:/app/backend/data
 
-  n8n-import:
-    <<: *service-n8n
-    container_name: n8n-import
-    entrypoint: /bin/sh
-    command:
-      - "-c"
-      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
-    volumes:
-      - ./n8n/backup:/backup
+#  n8n-import:
+#    <<: *service-n8n
+#    container_name: n8n-import
+#    entrypoint: /bin/sh
+#    command:
+#      - "-c"
+#      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
+#    volumes:
+#      - ./n8n/backup:/backup
 
   n8n:
     <<: *service-n8n
@@ -110,9 +105,9 @@ services:
       - n8n_storage:/home/node/.n8n
       - ./n8n/backup:/backup
       - ./shared:/data/shared
-    depends_on:
-      n8n-import:
-        condition: service_completed_successfully
+#    depends_on:
+#      n8n-import:
+#        condition: service_completed_successfully
 
   qdrant:
     image: qdrant/qdrant
